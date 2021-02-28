@@ -18,12 +18,14 @@ setInterval(function(){
 	try {
 		var receive = ele.contentWindow.window.name;
 		if (receive.substring(0,7) == "receive")
+		{
 			window.name = receive;
-		var from_page_length = parseInt(receive.substring(31));
-		var from_page = receive.substring(31+from_page_length.toString().length+6,31+from_page_length.toString().length+6+from_page_length);
-		var to_page_length = parseInt(receive.substring(31+from_page_length.toString().length+6+from_page_length+8));
-		var to_page =receive.substring(31+from_page_length.toString().length+6+from_page_length+8+to_page_length.toString().length+4,31+from_page_length.toString().length+6+from_page_length+8+to_page_length.toString().length+4+to_page_length);
-		location.href = to_page;
+			var from_page_length = parseInt(receive.substring(31));
+			var from_page = receive.substring(31+from_page_length.toString().length+6,31+from_page_length.toString().length+6+from_page_length);
+			var to_page_length = parseInt(receive.substring(31+from_page_length.toString().length+6+from_page_length+8));
+			var to_page =receive.substring(31+from_page_length.toString().length+6+from_page_length+8+to_page_length.toString().length+4,31+from_page_length.toString().length+6+from_page_length+8+to_page_length.toString().length+4+to_page_length);
+			location.href = to_page;
+		}
 	} catch (err) {
 	}
 },200);	

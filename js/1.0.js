@@ -3,7 +3,7 @@ if (typeof websocket == "undefined")
 websocket.response = [];
 websocket.status = [];
 websocket.send = function (url,message) {
-	var len = websocket.response.length;
+	var len = websocket.status.length;
 	websocket.status[len] = 0;
 	var ele = document.createElement("iframe");
 	ele.src = location.origin + "/" + Math.random();
@@ -34,12 +34,12 @@ websocket.send = function (url,message) {
 				let message_size = parseInt(info.substring(31+from_size.toString().length+6+from_size+8+to_size.toString().length+4+to_size+13));
 				let message_info = info.substring(31+from_size.toString().length+6+from_size+8+to_size.toString().length+4+to_size+13+message_size.toString().length+9);
 				websocket.status[len] = 2;
-				websocket.response[websocket.response.length] = {content:message_info,from:from_url,url:to_url};
+				websocket.response[len] = {content:message_info,from:from_url,url:to_url};
 			}
 		} catch(err) {
 		};
 	},200);
-	return websocket.response.length;
+	return websocket.status.length;
 };
 websocket.respond = function (message) {
 	var from_url = encodeURI(location.href);

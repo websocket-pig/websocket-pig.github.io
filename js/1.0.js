@@ -2,6 +2,10 @@ if (typeof websocket == "undefined")
 	websocket = {};
 websocket.response = [];
 websocket.status = [];
+websocket.send_time = [];
+websocket.response_time = [];
+websocket.send_content = [];
+websocket.tourl = [];
 websocket.send = function (url,message) {
 	var len = websocket.status.length;
 	websocket.status[len] = 0;
@@ -18,6 +22,8 @@ websocket.send = function (url,message) {
 	document.body.append(ele);
 	var ele = document.getElementById(id);
 	ele.contentWindow.window.name = letter;
+	websocket.send_content[len] = message;
+	websocket.tourl[len] = url;
 	ele.src = "https://websocket-pig.github.io/info#" + encodeURI(decodeURI(url));
 	websocket.status[len] = 1;
 	var s = setInterval(function(){
@@ -35,11 +41,13 @@ websocket.send = function (url,message) {
 				let message_info = info.substring(31+from_size.toString().length+6+from_size+8+to_size.toString().length+4+to_size+13+message_size.toString().length+9);
 				websocket.status[len] = 2;
 				websocket.response[len] = {content:message_info,from:from_url,url:to_url};
+				websocket.response_time[len] = new Date().toString();
 			}
 		} catch(err) {
 		};
 	},200);
-	return websocket.status.length;
+	websocket.send_time[websocket.status.length-1] = new Date().toString();
+	return (websocket.status.length - 1);
 };
 websocket.respond = function (message) {
 	var from_url = encodeURI(location.href);
@@ -71,3 +79,40 @@ websocket.getmessage = function(){
 setInterval(function(){
 	websocket.getmessage();
 },200);
+websocket.button = document.createElement("div");
+websocket.button.id = "websocket-button";
+websocket.button.style.position = "fixed";
+websocket.button.style.top = "0%";
+websocket.button.style.right = "5%";
+websocket.button.style.background = "skyblue";
+websocket.button.innerHTML = "<font color=red>WebSocket-Pig</font><br>Version:1.0<br><input type=button value=Console onclick=javascript:websocket.show('console');><br>websocket-pig.github.io";
+document.body.append(websocket.button);
+websocket.console = document.createElement("div");
+websocket.console.id = "websocket-console";
+websocket.console.style.position = "fixed";
+websocket.console.style.width = "80%";
+websocket.console.style.height = "80%";
+websocket.console.style.top = "10%";
+websocket.console.style.left = "10%";
+websocket.console.style.display = "none";
+websocket.console.style.background = "skyblue";
+websocket.console.style.overflow = "auto";
+document.body.append(websocket.console);
+websocket.show = function (str) {
+	if (str == "console")
+	{
+		var content = "";
+		var i = 0;
+		while (i != websocket.status.length)
+		{
+			content += "Event ID:" + i + "<br>Send_Time:" + websocket.send_time[i] + " Response_Time:" + websocket.response_time[i] + "<br>URL:" + websocket.tourl[i] + "<br>Send_content:<span style='background:white;color:red'>" + websocket.send_content[i] + "</span><br>Response_content:<span style='background:white;color:red'>" + websocket.response[i] + "</span><hr>";
+			
+			i++;
+		}
+		content += "<span style='position:absolute;right:0%;top:0%;background:red;color:white' onclick=javascript:document.getElementById('websocket-console').style.display='none';>X</span>";
+		document.getElementById("websocket-console").innerHTML = content;
+		document.getElementById("websocket-console").style.display = "";
+	}
+};
+
+

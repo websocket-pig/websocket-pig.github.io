@@ -2,5 +2,7 @@
 <script src=/js/1.0.js></script>
 <script>
   console.log(window.name);
-  websocket.respond("WEBSOCKET-PIG");
+  setTimeout(function(){
+    websocket.respond("WEBSOCKET-PIG RANDOM" + Math.random());
+  },500);
 </script>
